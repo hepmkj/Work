@@ -13,9 +13,7 @@ allow = response {
   input.attributes.request.http.method == "GET"
   response := {
       "allowed": true,
-      "headers": {"x-ext-auth-allow": "yes"},
-      "body": "Authorized Request",
-      "http_status": 201
+      "headers": {"x-ext-auth-allow": "yes"}
   }
 }
 

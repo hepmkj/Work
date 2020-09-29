@@ -33,11 +33,9 @@ spec:
         - name: app
           #imagePullPolicy: Never
           #image: openpolicyagent/demo-test-server:v1
-          image: hepmkj1/java/spring-boot:1.0.0
+          image: hepmkj1/java:spring-boot
           ports:
             - containerPort: 8080
-          imagePullSecrets:    
-            - name: regcred  
         - name: envoy
           image: envoyproxy/envoy:v1.10.0
           securityContext:
@@ -91,3 +89,5 @@ spec:
         - name: opa-policy
           secret:
             secretName: opa-policy
+      imagePullSecrets:    
+        - name: regcred  

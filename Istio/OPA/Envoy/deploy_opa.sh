@@ -26,11 +26,15 @@ deploy_app_with_opa () {
     kubectl  get po
 }
 
-test_it () {
+SERVICE_URL=""
+get_service_url () {
     export SERVICE_PORT=$(kubectl get service example-app-service -o jsonpath='{.spec.ports[?(@.port==8080)].nodePort}')
     export SERVICE_HOST=$(minikube ip)
     export SERVICE_URL=$SERVICE_HOST:$SERVICE_PORT
     echo "SERVICE URL:  $SERVICE_URL"
+}
+
+test_it () {
 
     export ALICE_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiZ3Vlc3QiLCJzdWIiOiJZV3hwWTJVPSIsIm5iZiI6MTUxNDg1MTEzOSwiZXhwIjoxNjQxMDgxNTM5fQ.K5DnnbbIOspRbpCr2IKXE9cPVatGOCBrBQobQmBmaeU"
     export BOB_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW4iLCJzdWIiOiJZbTlpIiwibmJmIjoxNTE0ODUxMTM5LCJleHAiOjE2NDEwODE1Mzl9.WCxNAveAVAdRCmkpIObOTaSd0AJRECY2Ch2Qdic3kU8"
@@ -50,5 +54,14 @@ test_it () {
 
 }
 
-deploy_app_with_opa
+test_spring_boot () {
+get_service_url
+curl -i -X GET http://${SERVICE_URL}/test
+echo
+curl -i -X POST http://${SERVICE_URL}/test
+echo
+}
+
+#deploy_app_with_opa
+test_spring_boot
 #test_it

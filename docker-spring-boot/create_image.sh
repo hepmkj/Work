@@ -1,12 +1,25 @@
 #!/bin/bash
-#build the docker image
-#sudo docker  build -t spring-boot:1.0.0 .
 
-#run the image
-#sudo docker run -d -p 8080:8080 -t spring-boot:1.0.0
+version="1.0.1"
 
-create_docker_registry () {
-kubectl create secret docker-registry regcred --docker-username=hepmkj1 --docker-password=Amit1718@ --docker-email=manojkumar.jha@equifax.com -n default
-} 
+build_and_run () {
+    #build the docker image
+    docker build -t spring-boot-headers:${version} .
 
-create_docker_registry
+    #run the image
+    sudo docker run -d -p 8080:8080 -t spring-boot-headers:${version}
+}
+
+test_it () {
+    curl -i -H  "traceID:1234" http://localhost:8080/test
+    echo
+}
+upload_it () {
+  docker tag 9afb395dd81f hepmkj1/java:spring-boot-headers
+  docker push hepmkj1/java:spring-boot-headers
+}
+
+
+#build_and_run
+#test_it
+upload_it

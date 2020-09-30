@@ -71,31 +71,16 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
   private String getParameters(HttpServletRequest request) {
     StringBuffer posted = new StringBuffer();
-    Enumeration<?> e = request.getParameterNames();
-    if (e != null) {
-      posted.append("?");
-    }
+    Enumeration<String> e = request.getHeaderNames();
     while (e.hasMoreElements()) {
-      if (posted.length() > 1) {
-        posted.append("&");
-      }
-      String curr = (String) e.nextElement();
-      posted.append(curr + "=");
+      String hname = e.nextElement();
+      posted.append(hname);
+      String curr = request.getHeader(hname);
 
-      /*
-      if (curr.contains("password")
-          || curr.contains("pass")
-          || curr.contains("pwd")) {
-        posted.append("*****");
-      } else {
-        posted.append(request.getParameter(curr));
-      }
-       */
-    }
-    String ip = request.getHeader("X-FORWARDED-FOR");
-    String ipAddr = (ip == null) ? getRemoteAddr(request) : ip;
-    if (ipAddr != null && !ipAddr.equals("")) {
-      posted.append("&_psip=" + ipAddr);
+      if (posted.length() > 1)
+           curr += "&";
+        posted.append("=" + curr);
+
     }
     return posted.toString();
   }
